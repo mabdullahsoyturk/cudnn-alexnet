@@ -20,12 +20,12 @@
   }                                                                                                 \
 }
 
-__global__ void fill_constant(float *px, float k) {
+__global__ inline void fill_constant(float *px, float k) {
   int tid = threadIdx.x + blockIdx.x * blockDim.x;
   px[tid] = k;
 }
 
-void print(const float *data, int n, int c, int h, int w) {
+inline void print(const float *data, int n, int c, int h, int w) {
   std::vector<float> buffer(1 << 20);
   CUDA_CALL(cudaMemcpy(buffer.data(), data, n * c * h * w * sizeof(float), cudaMemcpyDeviceToHost));
   

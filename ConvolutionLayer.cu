@@ -1,6 +1,6 @@
 #include "ConvolutionLayer.h"
 
-ConvolutionLayer::ConvolutionLayer(cudnnHandle_t* cudnn): handle(cudnn) {}
+ConvolutionLayer::ConvolutionLayer(cudnnHandle_t* handle): handle(handle) {}
 
 void ConvolutionLayer::SetInputDescriptor(int N, int C, int H, int W) {
     input_n = N;
@@ -68,7 +68,7 @@ void ConvolutionLayer::SetAlgorithm() {
     cudnnConvolutionFwdAlgoPerf_t convolution_algo_perf;
     int algo_count;
 
-    cudnnGetConvolutionForwardAlgorithm_v7(handle,
+    cudnnGetConvolutionForwardAlgorithm_v7(*handle,
                                             input_descriptor,
                                             filter_descriptor,
                                             convolution_descriptor,
@@ -91,7 +91,7 @@ void ConvolutionLayer::AllocateMemory() {
 }
 
 void ConvolutionLayer::AllocateWorkspace() {
-    CUDNN_CALL(cudnnGetConvolutionForwardWorkspaceSize(handle, 
+    CUDNN_CALL(cudnnGetConvolutionForwardWorkspaceSize(*handle, 
                                                      input_descriptor, filter_descriptor, convolution_descriptor, output_descriptor, 
                                                      algorithm, 
                                                      &workspace_size));
@@ -101,7 +101,7 @@ void ConvolutionLayer::AllocateWorkspace() {
 }
 
 void ConvolutionLayer::Forward() {
-    CUDNN_CALL(cudnnConvolutionForward(handle,
+    CUDNN_CALL(cudnnConvolutionForward(*handle,
                                      &alpha, 
                                      input_descriptor, input_data, 
                                      filter_descriptor, filter_data,
