@@ -10,8 +10,8 @@ all: convolution oop
 convolution: $(TARGET).cu
 	$(CXX) $(CXXFLAGS) $(HEADERS) $(LIBS) $(TARGET).cu -o $(TARGET) -lcudnn
 
-oop: oop.cu ConvolutionLayer.cu
-	$(CXX) $(CXXFLAGS) $(HEADERS) $(LIBS) oop.cu ConvolutionLayer.cu -o oop -lcudnn
+oop: oop.cu ConvolutionLayer.cu PoolingLayer.cu RELU.cu
+	$(CXX) $(CXXFLAGS) $(HEADERS) $(LIBS) oop.cu ConvolutionLayer.cu PoolingLayer.cu RELU.cu -o oop -lcudnn
 
 .phony: clean
 

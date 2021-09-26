@@ -4,7 +4,7 @@
 
 class ConvolutionLayer {
     public:
-        cudnnHandle_t* handle;
+        cudnnHandle_t handle;
 
         cudnnTensorDescriptor_t input_descriptor;
         cudnnFilterDescriptor_t filter_descriptor;
@@ -31,11 +31,13 @@ class ConvolutionLayer {
         float *filter_data;
         float *output_data;
 
-        ConvolutionLayer(cudnnHandle_t* handle);
+        ConvolutionLayer(cudnnHandle_t handle, float* data);
         void SetInputDescriptor(int N, int C, int H, int W);
         void SetFilterDescriptor(int N, int C, int H, int W);
         void SetConvolutionDescriptor(int H_padding, int W_padding, int H_stride, int W_stride, int H_dilation, int W_dilation);
         void SetOutputDescriptor();
+        cudnnTensorDescriptor_t GetOutputDescriptor();
+        float* GetOutputData();
         void SetAlgorithm();
         void AllocateMemory();
         void AllocateWorkspace();

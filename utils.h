@@ -20,7 +20,7 @@
   }                                                                                                 \
 }
 
-__global__ inline void fill_constant(float *px, float k) {
+__global__ __forceinline__ void fill_constant(float *px, float k) {
   int tid = threadIdx.x + blockIdx.x * blockDim.x;
   px[tid] = k;
 }
