@@ -14,9 +14,9 @@ void ConvolutionLayer::SetInputDescriptor(int N, int C, int H, int W) {
     input_w = W;
 
     CUDNN_CALL(cudnnSetTensor4dDescriptor(input_descriptor, 
-                                        CUDNN_TENSOR_NCHW, 
-                                        CUDNN_DATA_FLOAT,
-                                        input_n, input_c, input_h, input_w));
+                                          CUDNN_TENSOR_NCHW, 
+                                          CUDNN_DATA_FLOAT,
+                                          input_n, input_c, input_h, input_w));
     
     printf("Convolution Input Shape (NCHW) => N: %d, C: %d, H: %d, W: %d\n", input_n, input_c, input_h, input_w);
 }
@@ -37,13 +37,13 @@ void ConvolutionLayer::SetFilterDescriptor(int N, int C, int H, int W) {
 
 void ConvolutionLayer::SetOutputDescriptor() {
     CUDNN_CALL(cudnnGetConvolution2dForwardOutputDim(convolution_descriptor, 
-                                                   input_descriptor, filter_descriptor,
-                                                   &output_n, &output_c, &output_h, &output_w));
+                                                     input_descriptor, filter_descriptor,
+                                                     &output_n, &output_c, &output_h, &output_w));
 
     CUDNN_CALL(cudnnSetTensor4dDescriptor(output_descriptor, 
-                                            CUDNN_TENSOR_NCHW, 
-                                            CUDNN_DATA_FLOAT,
-                                            output_n, output_c, output_h, output_w));
+                                          CUDNN_TENSOR_NCHW, 
+                                          CUDNN_DATA_FLOAT,
+                                          output_n, output_c, output_h, output_w));
 
     printf("Convolution Output Shape (NCHW) => N: %d, C: %d, H: %d, W: %d\n", output_n, output_c, output_h, output_w);
 }
@@ -115,4 +115,11 @@ void ConvolutionLayer::Forward() {
                                        convolution_descriptor, algorithm, workspace_data, workspace_size,
                                        &beta, 
                                        output_descriptor, output_data));
+}
+
+void ConvolutionLayer::Free() {
+    CUDNN_CALL(cudnnDestroyTensorDescriptor(input_descriptor));
+    CUDNN_CALL(cudnnDestroyConvolutionDescriptor(convolution_descriptor));
+    CUDNN_CALL(cudnnDestroyFilterDescriptor(filter_descriptor));
+    CUDNN_CALL(cudnnDestroyTensorDescriptor(output_descriptor));
 }

@@ -7,7 +7,7 @@
 #define CUDNN_CALL(func) {                                                                         \
   cudnnStatus_t status = (func);                                                                   \
   if (status != CUDNN_STATUS_SUCCESS) {                                                            \
-    std::cerr << "Error on line " << __LINE__ << ": " << cudnnGetErrorString(status) << std::endl; \
+    std::cerr << "Error in file " << __FILE__ << " on line " << __LINE__ << ": " << cudnnGetErrorString(status) << std::endl; \
     std::exit(EXIT_FAILURE);                                                                       \
   }                                                                                                \
 }
@@ -15,7 +15,7 @@
 #define CUDA_CALL(func) {                                                                           \
   cudaError_t status = (func);                                                                      \
   if (status != cudaSuccess) {                                                                         \
-    std::cerr << "Error on line " << __LINE__ << ": " << cudaGetErrorString(status) << std::endl;  \
+    std::cerr << "Error in file " << __FILE__ << " on line " << __LINE__ << ": " << cudaGetErrorString(status) << std::endl;  \
     std::exit(1);                                                                                   \
   }                                                                                                 \
 }

@@ -1,12 +1,23 @@
 #include "PoolingLayer.h"
 
 PoolingLayer::PoolingLayer(cudnnHandle_t handle): handle(handle) {
+    CUDNN_CALL(cudnnCreateTensorDescriptor(&input_descriptor))
     CUDNN_CALL(cudnnCreatePoolingDescriptor(&pooling_descriptor));
     CUDNN_CALL(cudnnCreateTensorDescriptor(&output_descriptor));
 }
 
-void PoolingLayer::SetInputDescriptor(cudnnTensorDescriptor_t prev_output_descriptor) {
-    input_descriptor = prev_output_descriptor;
+void PoolingLayer::SetInputDescriptor(int N, int C, int H, int W) {
+    input_n = N;
+    input_c = C;
+    input_h = H;
+    input_w = W;
+
+    CUDNN_CALL(cudnnSetTensor4dDescriptor(input_descriptor, 
+                                          CUDNN_TENSOR_NCHW, 
+                                          CUDNN_DATA_FLOAT,
+                                          input_n, input_c, input_h, input_w));
+    
+    printf("Pooling Input Shape (NCHW) => N: %d, C: %d, H: %d, W: %d\n", input_n, input_c, input_h, input_w);
 }
 
 void PoolingLayer::SetInputData(float* data) {
@@ -35,7 +46,7 @@ void PoolingLayer::SetOutputDescriptor(int N, int C, int H, int W) {
                                                  input_descriptor,
                                                  &output_n, &output_c, &output_h, &output_w));
 
-    printf("Pooling 1_Output Shape (NCHW) => N: %d, C: %d, H: %d, W: %d\n", output_n, output_c, output_h, output_w);
+    printf("Pooling Output Shape (NCHW) => N: %d, C: %d, H: %d, W: %d\n", output_n, output_c, output_h, output_w);
 
     CUDNN_CALL(cudnnCreateTensorDescriptor(&output_descriptor));
     CUDNN_CALL(cudnnSetTensor4dDescriptor(output_descriptor, 
@@ -61,4 +72,10 @@ void PoolingLayer::Forward() {
                                    output_descriptor, output_data));
 
     //cudaFree(input_data);
+}
+
+void PoolingLayer::Free() {
+    CUDNN_CALL(cudnnDestroyTensorDescriptor(input_descriptor));
+    CUDNN_CALL(cudnnDestroyPoolingDescriptor(pooling_descriptor));
+    CUDNN_CALL(cudnnDestroyTensorDescriptor(output_descriptor));
 }

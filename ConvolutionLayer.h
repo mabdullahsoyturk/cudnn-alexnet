@@ -42,4 +42,5 @@ class ConvolutionLayer {
         void AllocateMemory();
         void AllocateWorkspace();
         void Forward();
+        void Free();
 };

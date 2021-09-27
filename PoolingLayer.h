@@ -24,11 +24,12 @@ class PoolingLayer {
 
         PoolingLayer(cudnnHandle_t handle);
 
-        void SetInputDescriptor(cudnnTensorDescriptor_t prev_output_descriptor);
+        void SetInputDescriptor(int N, int C, int H, int W);
         void SetPoolingDescriptor(int window_H, int window_W, int stride_V, int stride_H);
         void SetOutputDescriptor(int N, int C, int H, int W);
         float* GetOutputData();
         void SetInputData(float* data);
         void AllocateMemory();
         void Forward();
+        void Free();
 };
