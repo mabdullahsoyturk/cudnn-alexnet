@@ -122,4 +122,5 @@ void ConvolutionLayer::Free() {
     CUDNN_CALL(cudnnDestroyConvolutionDescriptor(convolution_descriptor));
     CUDNN_CALL(cudnnDestroyFilterDescriptor(filter_descriptor));
     CUDNN_CALL(cudnnDestroyTensorDescriptor(output_descriptor));
+    CUDA_CALL(cudaFree(input_data));
 }

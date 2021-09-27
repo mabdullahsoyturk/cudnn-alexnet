@@ -128,7 +128,7 @@ int main() {
      // Pooling Layer 8
      PoolingLayer pooling3(cudnn);
      pooling3.SetInputDescriptor(1, 256, 13, 13);
-     pooling3.SetInputData(convolution2.GetOutputData());
+     pooling3.SetInputData(convolution5.GetOutputData());
      pooling3.SetPoolingDescriptor(3, 3, 2, 2);
      pooling3.SetOutputDescriptor(1, 256, 6, 6);
      pooling3.AllocateMemory();
@@ -136,6 +136,6 @@ int main() {
      pooling3.Free();
 
      // Cleanup
-     CUDA_CALL(cudaFree(input_data));
+     //CUDA_CALL(cudaFree(input_data));
      CUDNN_CALL(cudnnDestroy(cudnn));
 }

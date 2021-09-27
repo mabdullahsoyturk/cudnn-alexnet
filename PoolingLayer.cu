@@ -78,4 +78,5 @@ void PoolingLayer::Free() {
     CUDNN_CALL(cudnnDestroyTensorDescriptor(input_descriptor));
     CUDNN_CALL(cudnnDestroyPoolingDescriptor(pooling_descriptor));
     CUDNN_CALL(cudnnDestroyTensorDescriptor(output_descriptor));
+    CUDA_CALL(cudaFree(input_data));
 }
