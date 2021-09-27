@@ -7,7 +7,7 @@
 #define IMAGE_H 224
 #define IMAGE_W 224
 
-#define ITERATIONS 100
+#define ITERATIONS 10000
 
 int main() {
     cudnnHandle_t cudnn;
@@ -141,6 +141,5 @@ int main() {
     }
 
      // Cleanup
-     //CUDA_CALL(cudaFree(input_data));
      CUDNN_CALL(cudnnDestroy(cudnn));
 }

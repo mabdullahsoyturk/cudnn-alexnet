@@ -1,14 +1,10 @@
 CXX := nvcc
-TARGET := convolution
 CUDNN_PATH := /usr/local/cuda
 HEADERS := -I $(CUDNN_PATH)/include
 LIBS := -L $(CUDNN_PATH)/lib64 -L/usr/local/lib
-CXXFLAGS := -arch=sm_35 -std=c++11 -DDEBUG=0
+CXXFLAGS := -arch=sm_75 -std=c++11 -DDEBUG=0
 
-all: convolution oop
-
-convolution: $(TARGET).cu
-	$(CXX) $(CXXFLAGS) $(HEADERS) $(LIBS) $(TARGET).cu -o $(TARGET) -lcudnn
+all: oop
 
 oop: oop.cu ConvolutionLayer.cu PoolingLayer.cu RELU.cu
 	$(CXX) $(CXXFLAGS) $(HEADERS) $(LIBS) oop.cu ConvolutionLayer.cu PoolingLayer.cu RELU.cu -o oop -lcudnn
@@ -16,4 +12,4 @@ oop: oop.cu ConvolutionLayer.cu PoolingLayer.cu RELU.cu
 .phony: clean
 
 clean:
-	rm $(TARGET) || echo -n ""
+	rm oop || echo -n ""
