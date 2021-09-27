@@ -16,8 +16,9 @@ void PoolingLayer::SetInputDescriptor(int N, int C, int H, int W) {
                                           CUDNN_TENSOR_NCHW, 
                                           CUDNN_DATA_FLOAT,
                                           input_n, input_c, input_h, input_w));
-    
+    #if DEBUG
     printf("Pooling Input Shape (NCHW) => N: %d, C: %d, H: %d, W: %d\n", input_n, input_c, input_h, input_w);
+    #endif
 }
 
 void PoolingLayer::SetInputData(float* data) {
@@ -46,7 +47,9 @@ void PoolingLayer::SetOutputDescriptor(int N, int C, int H, int W) {
                                                  input_descriptor,
                                                  &output_n, &output_c, &output_h, &output_w));
 
+    #if DEBUG
     printf("Pooling Output Shape (NCHW) => N: %d, C: %d, H: %d, W: %d\n", output_n, output_c, output_h, output_w);
+    #endif
 
     CUDNN_CALL(cudnnCreateTensorDescriptor(&output_descriptor));
     CUDNN_CALL(cudnnSetTensor4dDescriptor(output_descriptor, 
@@ -64,14 +67,24 @@ void PoolingLayer::AllocateMemory() {
 }
 
 void PoolingLayer::Forward() {
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+    
+    cudaEventRecord(start);
     CUDNN_CALL(cudnnPoolingForward(handle,
                                    pooling_descriptor,
                                    &alpha,
                                    input_descriptor, input_data,
                                    &beta,
                                    output_descriptor, output_data));
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
 
-    //cudaFree(input_data);
+    float milliseconds = 0;
+    cudaEventElapsedTime(&milliseconds, start, stop);
+
+    printf("%f,", milliseconds);
 }
 
 void PoolingLayer::Free() {

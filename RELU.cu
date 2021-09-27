@@ -22,11 +22,15 @@ void RELU::SetInputDescriptor(int N, int C, int H, int W) {
                                         CUDNN_DATA_FLOAT,
                                         input_n, input_c, input_h, input_w));
     
+    #if DEBUG
     printf("RELU Input Shape (NCHW) => N: %d, C: %d, H: %d, W: %d\n", input_n, input_c, input_h, input_w);
+    #endif
 
     RELU::SetOutputDescriptor();
 
+    #if DEBUG
     printf("RELU Output Shape (NCHW) => N: %d, C: %d, H: %d, W: %d\n", output_n, output_c, output_h, output_w);
+    #endif
 }
 
 void RELU::SetOutputDescriptor() {
@@ -37,6 +41,11 @@ void RELU::SetOutputDescriptor() {
 }
 
 void RELU::Forward() {
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+    
+    cudaEventRecord(start);
     CUDNN_CALL(cudnnActivationForward(handle,
                                       activation_descriptor,
                                       &alpha,
@@ -45,6 +54,13 @@ void RELU::Forward() {
                                       &beta,
                                       input_descriptor,
                                       input_data));
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
+
+    float milliseconds = 0;
+    cudaEventElapsedTime(&milliseconds, start, stop);
+
+    printf("%f,", milliseconds);
 }
 
 void RELU::Free() {

@@ -3,7 +3,7 @@ TARGET := convolution
 CUDNN_PATH := /usr/local/cuda
 HEADERS := -I $(CUDNN_PATH)/include
 LIBS := -L $(CUDNN_PATH)/lib64 -L/usr/local/lib
-CXXFLAGS := -arch=sm_35 -std=c++11
+CXXFLAGS := -arch=sm_35 -std=c++11 -DDEBUG=0
 
 all: convolution oop
 

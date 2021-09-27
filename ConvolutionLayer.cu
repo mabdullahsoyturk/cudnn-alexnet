@@ -18,7 +18,9 @@ void ConvolutionLayer::SetInputDescriptor(int N, int C, int H, int W) {
                                           CUDNN_DATA_FLOAT,
                                           input_n, input_c, input_h, input_w));
     
+    #if DEBUG
     printf("Convolution Input Shape (NCHW) => N: %d, C: %d, H: %d, W: %d\n", input_n, input_c, input_h, input_w);
+    #endif
 }
 
 void ConvolutionLayer::SetFilterDescriptor(int N, int C, int H, int W) {
@@ -32,7 +34,9 @@ void ConvolutionLayer::SetFilterDescriptor(int N, int C, int H, int W) {
                                     CUDNN_TENSOR_NCHW,
                                     filter_n, filter_c, filter_h, filter_w));
 
+    #if DEBUG
     printf("Convolution Filter Shape (NCHW) => N: %d, C: %d, H: %d, W: %d\n", filter_n, filter_c, filter_h, filter_w);
+    #endif
 }
 
 void ConvolutionLayer::SetOutputDescriptor() {
@@ -44,8 +48,10 @@ void ConvolutionLayer::SetOutputDescriptor() {
                                           CUDNN_TENSOR_NCHW, 
                                           CUDNN_DATA_FLOAT,
                                           output_n, output_c, output_h, output_w));
-
+    
+    #if DEBUG
     printf("Convolution Output Shape (NCHW) => N: %d, C: %d, H: %d, W: %d\n", output_n, output_c, output_h, output_w);
+    #endif
 }
 
 cudnnTensorDescriptor_t ConvolutionLayer::GetOutputDescriptor() {
@@ -68,9 +74,11 @@ void ConvolutionLayer::SetConvolutionDescriptor(int H_padding, int W_padding, in
                                              padding_h, padding_w, stride_h, stride_w, dilation_h, dilation_w,
                                              CUDNN_CONVOLUTION, 
                                              CUDNN_DATA_FLOAT));
-
+    
+    #if DEBUG
     printf("Convolution parameters => Padding h: %d, Padding w: %d, Stride h: %d, Stride w: %d, Dilation h: %d, Dilation w: %d\n",
                                     padding_h,     padding_w,     stride_h,     stride_w,     dilation_h,     dilation_w);
+    #endif
 }
 
 void ConvolutionLayer::SetAlgorithm() {
@@ -104,10 +112,17 @@ void ConvolutionLayer::AllocateWorkspace() {
                                                        &workspace_size));
 
     CUDA_CALL(cudaMalloc(&workspace_data, workspace_size));
+    #if DEBUG
     printf("Workspace allocated: %ld bytes\n", workspace_size);
+    #endif
 }
 
 void ConvolutionLayer::Forward() {
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+    
+    cudaEventRecord(start);
     CUDNN_CALL(cudnnConvolutionForward(handle,
                                        &alpha, 
                                        input_descriptor, input_data, 
@@ -115,6 +130,13 @@ void ConvolutionLayer::Forward() {
                                        convolution_descriptor, algorithm, workspace_data, workspace_size,
                                        &beta, 
                                        output_descriptor, output_data));
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
+
+    float milliseconds = 0;
+    cudaEventElapsedTime(&milliseconds, start, stop);
+
+    printf("%f,", milliseconds);
 }
 
 void ConvolutionLayer::Free() {
