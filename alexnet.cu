@@ -4,8 +4,8 @@
 
 #define IMAGE_N 1
 #define IMAGE_C 3
-#define IMAGE_H 224
-#define IMAGE_W 224
+#define IMAGE_H 227
+#define IMAGE_W 227
 
 #define ITERATIONS 10000
 
@@ -22,7 +22,7 @@ int main() {
         ConvolutionLayer convolution1(cudnn, input_data);
         convolution1.SetInputDescriptor(IMAGE_N, IMAGE_C, IMAGE_H, IMAGE_W);
         convolution1.SetFilterDescriptor(96, 3, 11, 11);
-        convolution1.SetConvolutionDescriptor(2, 2, 4, 4, 1, 1);
+        convolution1.SetConvolutionDescriptor(0, 0, 4, 4, 1, 1);
         convolution1.SetOutputDescriptor();
         convolution1.SetAlgorithm();
         convolution1.AllocateWorkspace();
@@ -58,7 +58,7 @@ int main() {
         convolution2.Forward();
         convolution2.Free();
 
-        // ReLU 2
+        // ReLU 3
         RELU relu2(cudnn, convolution2.GetOutputData());
         relu2.SetInputDescriptor(1, 256, 27, 27);
         relu2.Forward();
@@ -86,7 +86,7 @@ int main() {
         convolution3.Forward();
         convolution3.Free();
 
-        // ReLU 3
+        // ReLU 5
         RELU relu3(cudnn, convolution3.GetOutputData());
         relu3.SetInputDescriptor(1, 384, 13, 13);
         relu3.Forward();
@@ -104,7 +104,7 @@ int main() {
         convolution4.Forward();
         convolution4.Free();
 
-        // ReLU 3
+        // ReLU 6
         RELU relu4(cudnn, convolution4.GetOutputData());
         relu4.SetInputDescriptor(1, 384, 13, 13);
         relu4.Forward();
@@ -122,7 +122,7 @@ int main() {
         convolution5.Forward();
         convolution5.Free();
 
-        // ReLU 3
+        // ReLU 7
         RELU relu5(cudnn, convolution5.GetOutputData());
         relu5.SetInputDescriptor(1, 256, 13, 13);
         relu5.Forward();

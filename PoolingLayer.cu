@@ -85,6 +85,7 @@ void PoolingLayer::Forward() {
     cudaEventElapsedTime(&milliseconds, start, stop);
 
     printf("%f,", milliseconds);
+    cudaDeviceSynchronize();
 }
 
 void PoolingLayer::Free() {

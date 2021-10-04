@@ -4,12 +4,12 @@ HEADERS := -I $(CUDNN_PATH)/include
 LIBS := -L $(CUDNN_PATH)/lib64 -L/usr/local/lib
 CXXFLAGS := -arch=sm_75 -std=c++11 -DDEBUG=0
 
-all: oop
+all: alexnet
 
-oop: oop.cu ConvolutionLayer.cu PoolingLayer.cu RELU.cu
-	$(CXX) $(CXXFLAGS) $(HEADERS) $(LIBS) oop.cu ConvolutionLayer.cu PoolingLayer.cu RELU.cu -o oop -lcudnn
+alexnet: alexnet.cu ConvolutionLayer.cu PoolingLayer.cu RELU.cu
+	$(CXX) $(CXXFLAGS) $(HEADERS) $(LIBS) alexnet.cu ConvolutionLayer.cu PoolingLayer.cu RELU.cu -o alexnet -lcudnn
 
 .phony: clean
 
 clean:
-	rm oop || echo -n ""
+	rm alexnet || echo -n ""
