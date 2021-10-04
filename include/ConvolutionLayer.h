@@ -1,5 +1,5 @@
 #pragma once
-#include "utils.h"
+#include "Utils.h"
 #include <cudnn.h>
 
 class ConvolutionLayer {

@@ -1,13 +1,13 @@
 CXX := nvcc
 CUDNN_PATH := /usr/local/cuda
-HEADERS := -I $(CUDNN_PATH)/include
+HEADERS := -I $(CUDNN_PATH)/include -I ./include
 LIBS := -L $(CUDNN_PATH)/lib64 -L/usr/local/lib
 CXXFLAGS := -arch=sm_75 -std=c++11 -DDEBUG=0
 
 all: alexnet
 
-alexnet: alexnet.cu ConvolutionLayer.cu PoolingLayer.cu RELU.cu
-	$(CXX) $(CXXFLAGS) $(HEADERS) $(LIBS) alexnet.cu ConvolutionLayer.cu PoolingLayer.cu RELU.cu -o alexnet -lcudnn
+alexnet: src/Alexnet.cu src/ConvolutionLayer.cu src/PoolingLayer.cu src/RELU.cu src/Utils.cu
+	$(CXX) $(CXXFLAGS) $(HEADERS) $(LIBS) src/Alexnet.cu src/ConvolutionLayer.cu src/PoolingLayer.cu src/RELU.cu src/Utils.cu -o alexnet -lcudnn
 
 .phony: clean
 
