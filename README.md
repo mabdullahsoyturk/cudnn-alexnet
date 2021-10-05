@@ -1,6 +1,6 @@
-# 2D Convolution with cuDNN
+# AlexNet with cuDNN
 
-This repository contains the implementation of the most basic 2D convolution you can think of.
+This repository contains an implementation of AlexNet model on ImageNet type of images (227x227x3)
 
 Software versions: 
 * CUDA Toolkit 11.2
@@ -8,5 +8,7 @@ Software versions:
 
 ```sh
 make
-./convolution
+./alexnet
 ```
+
+Change DEBUG in Makefile for debugging purposes.
