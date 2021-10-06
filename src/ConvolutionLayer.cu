@@ -95,6 +95,7 @@ void ConvolutionLayer::SetAlgorithm() {
                                            &convolution_algo_perf);
     
     algorithm = convolution_algo_perf.algo;
+    //algorithm = CUDNN_CONVOLUTION_FWD_ALGO_IMPLICIT_GEMM;
 }
 
 void ConvolutionLayer::AllocateMemory() {
