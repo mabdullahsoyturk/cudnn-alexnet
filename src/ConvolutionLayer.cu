@@ -138,7 +138,6 @@ void ConvolutionLayer::Forward() {
     cudaEventElapsedTime(&milliseconds, start, stop);
 
     printf("%f,", milliseconds);
-    cudaDeviceSynchronize();
 }
 
 void ConvolutionLayer::Free() {
