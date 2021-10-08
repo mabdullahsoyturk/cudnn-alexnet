@@ -17,6 +17,7 @@ int main() {
         float *input_data;
         CUDA_CALL(cudaMalloc(&input_data, IMAGE_N * IMAGE_C * IMAGE_H * IMAGE_W * sizeof(float)));
         fill_constant<<<IMAGE_W * IMAGE_H, IMAGE_N * IMAGE_C>>>(input_data, 1.f);
+        cudaDeviceSynchronize();
 
         // Convolution Layer 1
         ConvolutionLayer convolution1(cudnn, input_data);
